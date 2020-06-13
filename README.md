@@ -1,29 +1,46 @@
-# README #
+# humit firebase cloud functions
 
-This README would normally document whatever steps are necessary to get your application up and running.
+home of cloud functions for humit firebase.
 
-### What is this repository for? ###
+- notifications
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+**login** to firebase using-
 
-### How do I get set up? ###
+```bash
+firebase login
+```
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+## setup
 
-### Contribution guidelines ###
+**install firebase** cli tools and node libraries required using-
 
-* Writing tests
-* Code review
-* Other guidelines
+```bash
+cd <functions-folder>
+npm install firebase-functions@latest firebase-admin@latest --save
+npm install -g firebase-tools
+```
 
-### Who do I talk to? ###
+(Ideally the following step is not required since repo is already setup)
+**setup** a new function using-
 
-* Repo owner or admin
-* Other community or team contact
+```bash
+firebase init functions
+```
+
+## install
+
+```bash
+npm install
+```
+
+## deploy
+
+```bash
+firebase deploy --only functions
+```
+
+## external links
+
+- [Getting Started](https://firebase.google.com/docs/functions/get-started)
+- [Config Environment Variables](https://firebase.google.com/docs/functions/config-env)
+- [Structure](https://firebase.google.com/docs/functions/organize-functions)
