@@ -12,6 +12,7 @@ firebase login
 
 ## setup
 
+(**required**)
 **install firebase** cli tools and node libraries required using-
 
 ```bash
@@ -20,7 +21,7 @@ npm install firebase-functions@latest firebase-admin@latest --save
 npm install -g firebase-tools
 ```
 
-(Ideally the following step is not required since repo is already setup)
+(Ideally the following step is **not required** since repo is already setup)
 **setup** a new function using-
 
 ```bash
