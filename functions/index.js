@@ -30,7 +30,7 @@ exports.messagingNotifications = functions.database
         let senderSnapshot;
         const results = await Promise.all([getDeviceTokensPromise, getSenderPromise]);
         tokenSnapshot = results[0];
-        sender = results[1].val();
+        senderSnapshot = results[1];
 
         if (!tokenSnapshot.hasChildren()) {
             return console.log('There are no tokens to send notifications to.');
@@ -41,6 +41,7 @@ exports.messagingNotifications = functions.database
             return console.log('Notification token is empty.');
         }
 
+        const sender = senderSnapshot.val();
         if (!sender) {
             return console.log('No sender user found with UID: ', senderUID);
         }
