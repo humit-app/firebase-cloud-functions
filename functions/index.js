@@ -67,13 +67,18 @@ exports.messagingNotifications = functions.database
         return Promise.reject(new Error('No sender user found with UID: ', senderUID));
     }
 
-    // Notification details.
-    const payload = {
-        notification: {
-            title: `${sender.user_handle}`,
-            body: `${sender.user_handle} sent you a message.`,
-            icon: sender.profile_pic_url
+    try{
+        // Notification details.
+        const payload = {
+            notification: {
+                title: `${sender.user_handle}`,
+                body: `${sender.user_handle} sent you a message.`,
+                icon: sender.profile_pic_url
+            }
         }
+        return admin.messaging().sendToDevice(token, payload);
+    } catch (error) {
+        // console.log(error);
+        return Promise.reject(error);
     }
-    return admin.messaging().sendToDevice(token, payload);
 })

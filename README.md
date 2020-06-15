@@ -42,14 +42,34 @@ send a notification to the receiver as soon as there is a new message.
 
 if a new message is send, a new entry is created at `/conversations/$conversationID/messages/$messageID`.
 
+this function expects the following data structure at firebase db:
+
 ```
 /humit-dev
     /conversations:
         /$conversationID:
-            /last_message: "..."
-            /members: [...]
-            /messages
-                /$messageID
+            /last_message: "...",
+            /members: [...],
+            /messages:
+                /$messageID:
+                    ...
+                    /sender_id: "...",
+                    /receiver_id: "...",
+                    /blocked: true/false,
+                    ...
+    /equations:
+        /$user1ID:
+            /$user2ID:
+                ...
+                /muted: true/false,
+                ...
+    /users:
+        /$userID:
+            ...
+            /profile_pic_url: "...",
+            /display_handle: "...",
+            /notification_id: "...",
+            ...
 ```
 
 #### trigger rules
