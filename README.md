@@ -58,22 +58,21 @@ The function triggers every time a new message is created at `/conversations/$co
 
 ## deploy
 
-[FULL DOCS](https://firebase.google.com/docs/functions/manage-functions)
-by default cli looks in `functions/` folder.
+See external links at the bottom for additional info. By default cli looks in `functions/` folder.
 
-to deploy all functions in `fucntions/index.js`:
+- to deploy all functions in `fucntions/index.js`:
 
 ```bash
 firebase deploy --only functions
 ```
 
-to deploy a specific function:
+- to deploy a specific function:
 
 ```bash
 firebase deploy --only functions:<func-name>
 ```
 
-to delete:
+- to delete:
 
 ```bash
 firebase functions:delete <func-name>
@@ -83,5 +82,6 @@ firebase functions:delete <func-name>
 
 - [Based On Sample @](https://github.com/firebase/functions-samples/blob/master/fcm-notifications/functions/index.js)
 - [Getting Started](https://firebase.google.com/docs/functions/get-started)
-- [Config Environment Variables](https://firebase.google.com/docs/functions/config-env)
-- [Structure](https://firebase.google.com/docs/functions/organize-functions)
+- [Deployment Docs](https://firebase.google.com/docs/functions/manage-functions)
+- [Configure Environment Variables](https://firebase.google.com/docs/functions/config-env)
+- [Structure multiple functions](https://firebase.google.com/docs/functions/organize-functions)

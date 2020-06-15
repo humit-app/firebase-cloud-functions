@@ -2,14 +2,13 @@
 
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
-admin.initializeApp(functions.config().functions)
-
+admin.initializeApp()
+var db = admin.database();
 
 // Listens for new messages added to /conversations/:conversation_id/messages/:message_id
 exports.messagingNotifications = functions.database
 .ref('/conversations/{conversationId}/messages/{messageId}')
 .onCreate(async (snap, context) => {
-    var db = admin.database();
     // Grab the original value of what was written to db
     const message = snap.val();
     const conversationId = context.params.conversationId;
