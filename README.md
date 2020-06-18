@@ -36,7 +36,7 @@ npm install
 
 ### messaging notifications
 
-send a notification to the receiver as soon as there is a new message.
+send a notification to the receiver as soon as there is a new message in Realtime DB using FCM.
 
 #### sample data structure
 

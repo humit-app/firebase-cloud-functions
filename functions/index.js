@@ -15,14 +15,15 @@ exports.messagingNotifications = functions.database
     const messageId = context.params.messageId;
     console.log('We have a new message ID: ', messageId, 'at conversation ID: ', conversationId);
 
+    let receiverUID, senderUID, blocked;
     try {
         // Get userIDs
-        const receiverUID = message.receiver_id;
-        const senderUID = message.sender_id;
+        receiverUID = message.receiver_id;
+        senderUID = message.sender_id;
         console.log('Message sent from senderUID: ', senderUID, ' to receiverUID: ', receiverUID);
 
         // Check if blocked
-        const blocked = message.blocked;
+        blocked = message.blocked;
         if (blocked) {
             console.log('User is blocked so no notifications to be sent');
             return null
