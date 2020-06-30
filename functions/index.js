@@ -11,33 +11,28 @@ exports.messagingNotifications = functions.database
 .onCreate(async (snap, context) => {
     // Grab the original value of what was written to db
     const message = snap.val();
-    const conversationId = context.params.conversationId;
-    const messageId = context.params.messageId;
-    console.log('We have a new message ID: ', messageId, 'at conversation ID: ', conversationId);
 
     let receiverUID, senderUID, blocked;
     try {
         // Get userIDs
         receiverUID = message.receiver_id;
         senderUID = message.sender_id;
-        console.log('Message sent from senderUID: ', senderUID, ' to receiverUID: ', receiverUID);
 
         // Check if blocked
         blocked = message.blocked;
         if (blocked) {
-            console.log('User is blocked so no notifications to be sent');
             return null
         }
 
     } catch (error) {
         // console.log(error);
+        console.log('Message sent from senderUID: ', senderUID, ' to receiverUID: ', receiverUID);
         return Promise.reject(new Error('Malformed message object. Either sender_id, receiver_id, or blocked key not found'));
     }
     
     // Check if muted
     const muted = await db.ref(`/equations/u_${receiverUID}/u_${senderUID}/muted`).once('value');
     if (muted.val()) {
-        console.log('User is muted so no notifications to be sent');
         return null
     }
 
@@ -51,35 +46,33 @@ exports.messagingNotifications = functions.database
     tokenSnapshot = results[0];
     senderSnapshot = results[1];
 
-    if (!tokenSnapshot.hasChildren()) {
-        // console.log('There are no tokens to send notifications to.');
-        return Promise.reject(new Error('There are no tokens to send notifications to.'));
-    }
-
     const token = tokenSnapshot.val();
     if (!token) {
-        // console.log('Notification token is empty.');
+        console.log('Message sent from senderUID: ', senderUID, ' to receiverUID: ', receiverUID);
         return Promise.reject(new Error('Notification token is empty.'));
     }
 
     const sender = senderSnapshot.val();
     if (!sender) {
-        // console.log('No sender user found with UID: ', senderUID);
+        console.log('Message sent from senderUID: ', senderUID, ' to receiverUID: ', receiverUID);
         return Promise.reject(new Error('No sender user found with UID: ', senderUID));
     }
 
     try{
         // Notification details.
         const payload = {
+            data: {
+                subject: 'messages'
+            },
             notification: {
-                title: `${sender.user_handle}`,
-                body: `${sender.user_handle} sent you a message.`,
+                title: `@${sender.user_handle} sent you a message`,
+                body: `press to see the message`,
                 icon: sender.profile_pic_url
             }
         }
         return admin.messaging().sendToDevice(token, payload);
     } catch (error) {
-        // console.log(error);
+        console.log('Message sent from senderUID: ', senderUID, ' to receiverUID: ', receiverUID);
         return Promise.reject(error);
     }
 })
