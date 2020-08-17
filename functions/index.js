@@ -58,16 +58,31 @@ exports.messagingNotifications = functions.database
         return Promise.reject(new Error('No sender user found with UID: ', senderUID));
     }
 
+    let title, body;
+    try {
+        if (message.contains_hum === false) {
+            title = `@${sender.user_handle} sent you a message`
+            body = message.message
+        } else if (message.sent_hum === false) {
+            title = `@${sender.user_handle} replied to your hum`
+            body = message.message
+        } else {
+            title = `@${sender.user_handle} sent you a hum`
+            body = `${message.hum_data.song_title} by ${message.hum_data.artists}`
+        }
+    } catch (error) {
+        title = `@${sender.user_handle} sent you a message`
+        body = `tap to see`
+    }
+
     try{
         // Notification details.
         const payload = {
             data: {
-                subject: 'messages'
-            },
-            notification: {
-                title: `@${sender.user_handle} sent you a message`,
-                body: `press to see the message`,
-                icon: sender.profile_pic_url
+                channel: 'messages',
+                title: title,
+                message: body,
+                largeIconUrl: sender.profile_pic_url
             }
         }
         return admin.messaging().sendToDevice(token, payload);
