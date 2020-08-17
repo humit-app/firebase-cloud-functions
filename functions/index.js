@@ -6,7 +6,7 @@ admin.initializeApp()
 var db = admin.database();
 
 // Listens for new messages added to /conversations/:conversation_id/messages/:message_id
-exports.messagingNotifications = functions.database
+exports.messagingNotificationsData = functions.database
 .ref('/conversations/{conversationId}/messages/{messageId}')
 .onCreate(async (snap, context) => {
     // Grab the original value of what was written to db
@@ -40,8 +40,7 @@ exports.messagingNotifications = functions.database
     const getDeviceTokensPromise = db.ref(`/users/${receiverUID}/notification_id`).once('value');
     const getSenderPromise = db.ref(`/users/${senderUID}`).once('value');
     
-    let tokenSnapshot;
-    let senderSnapshot;
+    let tokenSnapshot, senderSnapshot;
     const results = await Promise.all([getDeviceTokensPromise, getSenderPromise]);
     tokenSnapshot = results[0];
     senderSnapshot = results[1];
@@ -63,7 +62,7 @@ exports.messagingNotifications = functions.database
         if (message.contains_hum === false) {
             title = `@${sender.user_handle} sent you a message`
             body = message.message
-        } else if (message.sent_hum === false) {
+        } else if (message.sent_hum !== true) {
             title = `@${sender.user_handle} replied to your hum`
             body = message.message
         } else {
