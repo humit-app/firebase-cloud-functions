@@ -6,7 +6,7 @@ admin.initializeApp()
 var db = admin.database();
 
 // Listens for new messages added to /conversations/:conversation_id/messages/:message_id
-exports.messagingNotificationsData = functions.database
+exports.messagingNotifications = functions.database
 .ref('/conversations/{conversationId}/messages/{messageId}')
 .onCreate(async (snap, context) => {
     // Grab the original value of what was written to db
