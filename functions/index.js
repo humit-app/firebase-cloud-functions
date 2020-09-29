@@ -77,10 +77,12 @@ exports.messagingNotifications = functions.database
     try{
         // Notification details.
         const payload = {
+            notification: {
+                title: title,
+                body: body
+            },
             data: {
                 channel: 'messages',
-                title: title,
-                message: body,
                 largeIconUrl: sender.profile_pic_url
             }
         }
