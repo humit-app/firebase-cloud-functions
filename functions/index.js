@@ -81,10 +81,14 @@ exports.messagingNotifications = functions.database
                 title: title,
                 body: body
             },
-            data: {
-                channel: 'messages',
-                largeIconUrl: sender.profile_pic_url
-            }
+            fcmOptions: {
+                analyticsLabel: "messaging"
+            },
+            // },
+            // data: {
+            //     channel: 'messages',
+            //     largeIconUrl: sender.profile_pic_url
+            // }
         }
         return admin.messaging().sendToDevice(token, payload);
     } catch (error) {
