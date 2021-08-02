@@ -80,10 +80,7 @@ exports.messagingNotifications = functions.database
             notification: {
                 title: title,
                 body: body
-            },
-            fcmOptions: {
-                analyticsLabel: "messaging"
-            },
+            }
             // },
             // data: {
             //     channel: 'messages',
