@@ -66,7 +66,7 @@ exports.messagingNotifications = functions.database
             const config = {
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: 'Bearer facbcace-4eb0-4812-96f8-c5f7e4c95fdd'
+                    Authorization: `Bearer ${functions.config().webenage_authentication.key}`
                 }
             };
             axios
@@ -90,7 +90,8 @@ exports.messagingNotifications = functions.database
                     console.log('Response status: ', error.response.status, "; Response config data: ", error.response.config.data);
                     // fallback option: skipping WebEngage, using backend to notify
                     // Get device token for receiverUID and sender user details 
-                    const getDeviceTokensPromise = db.ref(`/users/${receiverUID}/notification_id`).once('value');
+                    const getDeviceTokensPromise = db.ref(` / users / $ { receiverUID }
+                        /notification_id`).once('value');
                     const getSenderPromise = db.ref(`/users/${senderUID}`).once('value');
 
                     let tokenSnapshot, senderSnapshot;
