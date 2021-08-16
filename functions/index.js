@@ -90,8 +90,7 @@ exports.messagingNotifications = functions.database
                     console.log('Response status: ', error.response.status, "; Response config data: ", error.response.config.data);
                     // fallback option: skipping WebEngage, using backend to notify
                     // Get device token for receiverUID and sender user details 
-                    const getDeviceTokensPromise = db.ref(` / users / $ { receiverUID }
-                        /notification_id`).once('value');
+                    const getDeviceTokensPromise = db.ref(`/users/${receiverUID}/notification_id`).once('value');
                     const getSenderPromise = db.ref(`/users/${senderUID}`).once('value');
 
                     let tokenSnapshot, senderSnapshot;
