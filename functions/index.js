@@ -55,7 +55,7 @@ exports.messagingNotifications = functions.database
 
         //Using Webenagge to send notification 
         let campaignID = "~1ni6qh2"
-        let campaignURL = `https://api.webengage.com/v2/accounts/aa131ccd/experiments/${campaignID}/transaction`;
+        let campaignURL = `https://api.webengage.com/v2/accounts/${functions.config().webenage_license_code.key}/experiments/${campaignID}/transaction`;
 
         //Calling the function
         sendNotif(campaignURL, receiverUID, title, body);

@@ -95,7 +95,7 @@ firebase deploy --only functions:<func-name>
 - to configure webengage auth key
 
 ```bash
-firebase functions:config:set webenage_authentication.key="auth-key-abc-xyz-goes-here"
+firebase functions:config:set webenage_authentication.key="auth-key-abc-xyz-goes-here" webenage_license_code.key="also-goes-here"
 ```
 
 - to delete:
