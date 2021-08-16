@@ -2,6 +2,7 @@
 
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
+const axios = require('axios')
 admin.initializeApp()
 var db = admin.database();
 
@@ -34,6 +35,27 @@ exports.messagingNotifications = functions.database
         const muted = await db.ref(`/equations/u_${receiverUID}/u_${senderUID}/muted`).once('value');
         if (muted.val()) {
             return null
+        }
+        
+        // Get device token for receiverUID and sender user details 
+        const getDeviceTokensPromise = db.ref(`/users/${receiverUID}/notification_id`).once('value');
+        const getSenderPromise = db.ref(`/users/${senderUID}`).once('value');
+
+        let tokenSnapshot, senderSnapshot;
+        const results = await Promise.all([getDeviceTokensPromise, getSenderPromise]);
+        tokenSnapshot = results[0];
+        senderSnapshot = results[1];
+
+        const token = tokenSnapshot.val();
+        if (!token) {
+            console.log('Message sent from senderUID: ', senderUID, ' to receiverUID: ', receiverUID);
+            return Promise.reject(new Error('Notification token is empty.'));
+        }
+
+        const sender = senderSnapshot.val();
+        if (!sender) {
+            console.log('Message sent from senderUID: ', senderUID, ' to receiverUID: ', receiverUID);
+            return Promise.reject(new Error('No sender user found with UID: ', senderUID));
         }
 
         let title, body;
@@ -84,53 +106,27 @@ exports.messagingNotifications = functions.database
                     },
                     config
                 )
-
-            .then(function(error) {
-                if (error.response.status !== 200) {
-                    console.log('Response status: ', error.response.status, "; Response config data: ", error.response.config.data);
-                    // fallback option: skipping WebEngage, using backend to notify
-                    // Get device token for receiverUID and sender user details 
-                    const getDeviceTokensPromise = db.ref(`/users/${receiverUID}/notification_id`).once('value');
-                    const getSenderPromise = db.ref(`/users/${senderUID}`).once('value');
-
-                    let tokenSnapshot, senderSnapshot;
-                    const results = await Promise.all([getDeviceTokensPromise, getSenderPromise]);
-                    tokenSnapshot = results[0];
-                    senderSnapshot = results[1];
-
-                    const token = tokenSnapshot.val();
-                    if (!token) {
-                        console.log('Message sent from senderUID: ', senderUID, ' to receiverUID: ', receiverUID);
-                        return Promise.reject(new Error('Notification token is empty.'));
-                    }
-
-                    const sender = senderSnapshot.val();
-                    if (!sender) {
-                        console.log('Message sent from senderUID: ', senderUID, ' to receiverUID: ', receiverUID);
-                        return Promise.reject(new Error('No sender user found with UID: ', senderUID));
-                    }
-
-                    try {
-                        // Notification details.
-                        const payload = {
-                            notification: {
-                                title: title,
-                                body: body
+                .then(async(response) => {
+                    return Promise.resolve(response);
+                })
+                .catch(async (error) => {
+                    if (error && error.response && error.response.status !== 200) {
+                        console.log('Response status: ', error.response.status, "; Response config data: ", error.response.config.data);
+                        // fallback option: skipping WebEngage, using backend to notify
+                        try {
+                            // Notification details.
+                            const payload = {
+                                notification: {
+                                    title: title,
+                                    body: body
+                                }
                             }
-                            // },
-                            // data: {
-                            //     channel: 'messages',
-                            //     largeIconUrl: sender.profile_pic_url
-                            // }
+                            return admin.messaging().sendToDevice(token, payload);
+                        } catch (error) {
+                            console.log('Message sent from senderUID: ', senderUID, ' to receiverUID: ', receiverUID);
+                            return Promise.reject(error);
                         }
-                        return admin.messaging().sendToDevice(token, payload);
-                    } catch (error) {
-                        console.log('Message sent from senderUID: ', senderUID, ' to receiverUID: ', receiverUID);
-                        return Promise.reject(error);
                     }
-
-                }
-            });
+                });
         }
-
     })
