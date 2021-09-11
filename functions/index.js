@@ -93,7 +93,7 @@ exports.messagingNotifications = functions.database
             };
             axios
                 .post(campaignURL, {
-                        "ttl": 60,
+                        "ttl": 3600,
                         "overrideData": {
                             "context": {
                                 "token": {
