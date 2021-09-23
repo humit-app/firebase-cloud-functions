@@ -76,7 +76,7 @@ exports.messagingNotifications = functions.database
         }
 
         //Using Webenagge to send notification 
-        let campaignID = "~1ni6qh2"
+        let campaignID = "~1qq388n"
         let campaignURL = `https://api.webengage.com/v2/accounts/${functions.config().webenage_license_code.key}/experiments/${campaignID}/transaction`;
 
         //Calling the function
@@ -107,6 +107,7 @@ exports.messagingNotifications = functions.database
                     config
                 )
                 .then(async(response) => {
+                    console.log(response.data);
                     return Promise.resolve(response);
                 })
                 .catch(async (error) => {
